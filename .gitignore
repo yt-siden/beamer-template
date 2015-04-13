@@ -1,0 +1,12 @@
+# gitignore for LaTeX-Beamer document
+*.aux
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.synctex.*
+*.toc
