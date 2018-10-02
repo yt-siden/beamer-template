@@ -1,2 +1,2 @@
-# An example LaTeX Beamer template for platex
+# Beamer template for my slides (2018-)
 
