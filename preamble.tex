@@ -1,119 +1,164 @@
-% Preamble for LaTeX Beamer documents
 \makeatletter
-\usepackage{helvet}
-\usepackage{amsmath, amsfonts, amssymb}
+
+% usepackage {{{
+% 数式ベクトル(太字)
 \usepackage{bm}
+% AMS math
+\usepackage{amsmath,amsfonts,amssymb}
+% 擬似コード
+\usepackage{algorithm,algpseudocode}
+% URL タイプセット
 \usepackage{url}
-\usepackage{multicol}
+% floating[H]
 \usepackage{here}
+% 枠環境(framed)
 \usepackage{framed}
-\usepackage{algpseudocode}
-\usepackage{algorithm}
-\usepackage[deluxe]{otf}
+% TikZ
 \usepackage{tikz}
+% TikZによる数式装飾
+\usepackage[beamer]{hf-tikz}
+% ソースコード貼付け
+\usepackage{listings}
+% 取り消し線
+\usepackage{ulem}
+% }}}
 
-% prevent garbled characters on PDF bookmarks
-\ifnum 42146=\euc"A4A2 \AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}\else
-\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}\fi
+% Appendixページの番号修正 ref. https://tex.stackexchange.com/a/2559 {{{
+\newcommand{\backupbegin}{
+    \newcounter{framenumberappendix}
+    \setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+    \addtocounter{framenumberappendix}{-\value{framenumber}}
+    \addtocounter{framenumber}{\value{framenumberappendix}}
+}
+% }}}
 
-% basic themes
+% beamer template {{{
+% テーマ読み込み
 \useoutertheme{split}
 \useinnertheme{rectangles}
 \usecolortheme{orchid}
 \usecolortheme{dolphin}
 \usefonttheme{professionalfonts}
 
-% transparent background on frametitle
-\setbeamercolor{frametitle}{bg=, fg=structure}
+% タイトルバー背景無効化
+\setbeamercolor{frametitle}{bg=}
 
-% disable navigation symbols
+% ナビゲーションアイコン無効化
 \setbeamertemplate{navigation symbols}{}
 
-% numbered caption
+% caption に番号追加
 \setbeamertemplate{caption}[numbered]
 
-% Japanese caption
-\renewcommand{\figurename}{図}
-\renewcommand{\tablename}{表}
-
-% rounded block environments with shadow
+% block環境を丸枠,影付に
 \setbeamertemplate{blocks}[shadow=true]
 \setbeamertemplate{blocks}[rounded]
 
-% customized outertheme definition (based on 'infolines' and 'split')
-\setbeamercolor{author in head/foot}{bg=gray!0!black,fg=white}
-\setbeamercolor{title in head/foot}{bg=gray!25!black,fg=white}
-\setbeamercolor{date in head/foot}{bg=gray!50!black,fg=white}
+\setbeamercolor{normal text}{bg=,fg=black}
+\setbeamercolor{headline}{ bg=,fg=}
+\setbeamercolor{footline}{ bg=,fg=}
+\setbeamercolor{titlelike}{bg=,fg=}
 
-% headline
-\setbeamertemplate{headline}{%
-  \leavevmode%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.25ex]{section in head/foot}%
-    \centering%
-    \insertsectionnavigationhorizontal{.8\paperwidth}{\hfill}{\hfill}%
-  \end{beamercolorbox}%
-}
+% split theme の headlineを改造
+\setbeamertemplate{headline}{}
 
-% footline
+% split theme の footlineを改造
 \setbeamertemplate{footline}
 {%
-  \leavevmode%
-  \hbox{\begin{beamercolorbox}[wd=.20\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{author in head/foot}%
-	  \centering\usebeamerfont{author in head/foot}\insertshortauthor~(\insertshortinstitute)%
-  \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.60\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
-      \centering\usebeamerfont{title in head/foot}\insertshorttitle%
-  \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.20\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{date in head/foot}%
-	  \centering\usebeamerfont{title in head/foot}\insertframenumber{} / \inserttotalframenumber%
-  \end{beamercolorbox}}%
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=.9\paperwidth,ht=3.5ex,sep=1ex]{footline}%
+            \insertshortauthor{} - \textit{\insertshorttitle} (\insertshortdate{})%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.1\paperwidth,ht=3.5ex,sep=1ex,right]{footline}%
+            \insertframenumber{} / \inserttotalframenumber%
+        \end{beamercolorbox}%
+    }%
 }
 
-% pseudocodes
+% }}}
+
+% フォント関連 {{{
+\renewcommand{\rmdefault}{ptm} % Roman
+\renewcommand{\sfdefault}{phv} % Sans-serif
+\renewcommand{\ttdefault}{pcr} % Typewriter
+\usepackage{nimbusmono}
+\usepackage[T1]{fontenc}
+% default
+\renewcommand{\familydefault}{\sfdefault}
+% }}}
+
+% 日本語関連 (英語の場合はコメントアウト) {{{
+% しおりの文字化け防止用
+\ifnum 42146=\euc"A4A2 \AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}\else
+\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}\fi
+% フォントマルチウェイト化
+\usepackage[deluxe]{otf}
+% 日本語デフォルトフォント
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+% }}}
+
+% 擬似コード {{{
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+% }}}
 
-% font settings
-\renewcommand{\rmdefault}{ptm}
-\renewcommand{\sfdefault}{phv}
-\renewcommand{\ttdefault}{pcr}
-\renewcommand{\familydefault}{\sfdefault}
-\renewcommand{\kanjifamilydefault}{\gtdefault}
+% caption {{{
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Tab.}
+% }}}
 
-% some color definitions
+% 色定義 {{{
 \definecolor{darkgreen}{RGB}{0,128,0}
 \definecolor{darkblue}{RGB}{0,0,160}
 \definecolor{darkred}{RGB}{128,0,0}
 \definecolor{darkyellow}{RGB}{192,192,0}
+% }}}
 
-% frequently used macros
-\newcommand{\NN}{\mathbb{N}}
-\newcommand{\RR}{\mathbb{R}}
-\newcommand{\CC}{\mathbb{C}}
-\newcommand{\ii}{\mathrm{i}}
-\newcommand{\ee}{\mathrm{e}}
-\newcommand{\TT}{\mathrm{T}}
-\newcommand{\HH}{\mathrm{H}}
-\newcommand{\INV}{{-1}}
-\newcommand{\eqn}[1]{{(#1)}}
-\newcommand{\code}[1]{{\ttfamily #1}}
+% よく使うものを定義 {{{
+\newcommand{\strong}[1]{{\bfseries #1}}
+\newcommand{\emm}[1]{{\itshape #1}}
+\newcommand{\comm}[1]{{\ttfamily #1}}
+\newcommand{\commr}[1]{{\ttfamily\color{red} #1}}
+\newcommand{\keyword}[1]{{\ttfamily\bfseries\color{blue} #1}}
 \newcommand{\func}[1]{{\ttfamily\bfseries #1}}
-\newcommand<>{\proc}[1]{{\color#2{darkgreen}\ttfamily\bfseries #1}}
+\newcommand{\insertURL}[1]{ {\scriptsize \url{#1}} }
+\newcommand{\eqn}[1]{(\ref{#1})}
+% }}}
 
-% insert TOC with the current section before starting a section
+% 数学記号 {{{
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\HH}{\mathrm{H}}
+\newcommand{\FF}{\mathrm{F}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\INV}{{-1}}
+% }}}
+
+% sectionの初めにTOCを挿入 {{{
 \AtBeginSection[]
 {
-	\begin{frame}
-		\frametitle{Outline}
+    \begin{frame}
+        \frametitle{Outline}
 
-		\tableofcontents[currentsection]
-	\end{frame}
+        \tableofcontents[currentsection]
+    \end{frame}
 }
+% }}}
 
-% document information
-\author[]{}
-\institute[]{}
-\title[]{}
-\date[]{}
+% Listings {{{
+\lstset{%
+    basicstyle=\ttfamily\scriptsize,%
+    keywordstyle=\bfseries,%
+    frame=single,%
+    tabsize=4,%
+    breaklines=true,%
+}
+% }}}
+
+\input{info.tex}
 
 \makeatother
